@@ -12,15 +12,14 @@ USER root
 
 # We add all the necessary files to the image
 ADD ROBEX /ROBEX 
+ADD preprocess.py /preprocess.py
+ADD test_net.py /test_net.py
+ADD CASC_25_3D_256_128_64 /CASC_25_3D_256_128_64
 
-# Configuration
+# Configuration: load WMH challenge project and install requirements 
 RUN git clone https://github.com/sergivalverde/WMH_challenge.git src
-RUN pip install nibabel
+RUN pip install -r src/requirements.txt
 
-RUN cd /usr/local/nets/src && git submodule init && git submodule update --remote
-RUN cd /usr/local/nets/src/cnn && git submodule init && git submodule update --remote
-RUN cd /usr/local/nets/src && git submodule init && git submodule update --remote
-RUN chmod 777 /bin/deep-challenge2016.sh
 
-# We prepare it to run with the images
-CMD deep-challenge2016.sh $@
+# test_net infers WMH segmentation to the input passed as /INPUT/
+CMD test_net.py
