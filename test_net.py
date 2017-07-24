@@ -8,17 +8,17 @@
 #  svalverde@eia.udg.edu 
 # ------------------------------------------------------------------------------------------------------------
 
-import os, argparse
-import importlib
-from natsort import natsorted 
-from collections import OrderedDict
-from distutils.dir_util import copy_tree
+import os, sys
+
+# import libs and set theano configuration
+sys.path.append('/src/')
+os.environ['THEANO_FLAGS']='mode=FAST_RUN,device=gpu0,floatX=float32,optimizer=fast_compile'
+
+# import libs
 from base import *
 from build_model import cascade_model
 from preprocess import skull_strip
 
-# THEANO CONFIGURATION
-os.environ['THEANO_FLAGS']='mode=FAST_RUN,device=gpu0,floatX=float32,optimizer=fast_compile'
 
 # --------------------------------------------------
 # options
@@ -32,6 +32,9 @@ options['current_scan'] = os.path.split(options['test_folder'])[1]
 options['modalities'] = ['T1', 'FLAIR']
 options['x_names'] = ['T1_brain.nii.gz', 'FLAIR_brain.nii.gz']
 exp_folder = os.path.join('/', options['experiment'])
+
+# preprocessing
+options['robex_path'] = '/ROBEX/runROBEX.sh'
 
 # net options 
 options['load_prev_weights'] = True
@@ -55,6 +58,11 @@ options['l_min'] = 2
 # FLAIR.nii.gz --> FLAIR_brain.nii.gz
 # T1.nii.gz --> T1_brain.nii.gz
 # --------------------------------------------------
+
+print "--------------------------------------------------"
+print "preprocessing ", options['current_scan']
+print "--------------------------------------------------"
+
 preprocess(options)
 
 # -------------------------------------------------        

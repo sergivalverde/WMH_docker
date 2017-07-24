@@ -17,7 +17,6 @@ def skull_strip(options):
     flair_st_im = options['test_folder'], 'FLAIR_brain.nii.gz'
     t1_st_im = options['test_folder'], 'T1_brain.nii.gz'
     
-    # flair skull-strip
-    os.system('/ROBEX/robex ' + flair_im + ' ' + flair_st_im)
-    os.system('/ROBEX/robex ' + t1_im + ' ' + t1_st_im)
+    os.system(options['robex_path']  +  '  ' + flair_im + '  '  + flair_st_im)
+    os.system(options['robex_path']  +  '  ' + t1_im +  '  ' + t1_st_im)
     

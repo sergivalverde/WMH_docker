@@ -11,15 +11,12 @@ MAINTAINER Sergi Valverde <svalverde@eia.udg.edu>
 USER root
 
 # We add all the necessary files to the image
-ADD deep-challenge2016.final.model_weights.pkl /usr/local/nets/deep-challenge2016.final.model_weights.pkl
-ADD deep-challenge2016.init.model_weights.pkl /usr/local/nets/deep-challenge2016.init.model_weights.pkl
-ADD deep-challenge2016.sh /bin/deep-challenge2016.sh
-ADD .theanorc /root/.theanorc
-
+ADD ROBEX /ROBEX 
 
 # Configuration
+RUN git clone https://github.com/sergivalverde/WMH_challenge.git src
 RUN pip install nibabel
-RUN git clone https://github.com/sergivalverde/.git /src
+
 RUN cd /usr/local/nets/src && git submodule init && git submodule update --remote
 RUN cd /usr/local/nets/src/cnn && git submodule init && git submodule update --remote
 RUN cd /usr/local/nets/src && git submodule init && git submodule update --remote
