@@ -25,9 +25,17 @@ from preprocess import skull_strip
 # --------------------------------------------------
 options = {}
 
+
+# --------------------------------------------------
+# move things to a tmp folder before starting
+# --------------------------------------------------
+os.mkdir('/tmp/seg')
+os.system('cp /input/* /tmp/seg')
+    
+
 # experiment name (where trained weights are)
 options['experiment'] = 'CASC_25_3D_256_128_64'
-options['test_folder'] = '/input'
+options['test_folder'] = '/tmp/seg'
 options['current_scan'] = os.path.split(options['test_folder'])[1]
 options['modalities'] = ['T1', 'FLAIR']
 options['x_names'] = ['T1_brain.nii.gz', 'FLAIR_brain.nii.gz']
@@ -63,7 +71,7 @@ print "--------------------------------------------------"
 print "preprocessing ", options['current_scan']
 print "--------------------------------------------------"
 
-preprocess(options)
+#skull_strip(options)
 
 # -------------------------------------------------        
 # initialize the CNN
@@ -78,11 +86,30 @@ model = cascade_model(options)
 # --------------------------------------------------
 
 print "--------------------------------------------------"
-print "testing scan ", options['current_scan']
+print "testing scan "
 print "--------------------------------------------------"
 
-x_data = {options['current_scan']: {m: os.path.join(options['test_folder'], options['current_scan'], n)
-                                    for n in zip(options['modalities'])}}
+#x_data = {options['current_scan']: {m: os.path.join(options['test_folder'], options['current_scan'], n)
+#                                    for n in zip(options['modalities'])}}
 
-options['test_name'] = options['current_scan'] + '_' + options['experiment'] + '.nii.gz'            
-out_seg = test_cascaded_model(model, x_data, options)
+x_data = {'seg': {'T1': options['x_names'][0], 'FLAIR': options['x_names'][1]}}
+
+
+print ' ---> testing the model'
+    
+# first network
+print " ---- first net ----- "
+options['test_name'] = os.path.join(options['test_folder'] , 'seg_prob_0.nii.gz')
+t1 = test_scan(model[0], test_x_data, options, save_nifti= True)
+
+# second network
+print " ---- second net ----- "
+options['test_name'] = os.path.join(options['test_folder'] , 'seg_prob_1.nii.gz')
+t2 = test_scan(model[1], test_x_data, options, save_nifti= True, candidate_mask = t1>0.5, test_da = options['test_da'])
+
+# postprocess the output segmentation
+options['test_name'] = os.path.join(options['test_folder'] , 'seg_out_CNN.nii.gz')
+out_segmentation = post_process_segmentation(t2, options, save_nifti = True)
+
+# remove tmp files
+#os.system('rm -r /tmp/seg/')

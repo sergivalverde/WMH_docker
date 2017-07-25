@@ -12,10 +12,10 @@ def skull_strip(options):
     - None 
     """
 
-    flair_im = options['test_folder'], 'FLAIR.nii.gz'
-    t1_im = options['test_folder'], 'T1.nii.gz'
-    flair_st_im = options['test_folder'], 'FLAIR_brain.nii.gz'
-    t1_st_im = options['test_folder'], 'T1_brain.nii.gz'
+    flair_im =    os.path.join(options['test_folder'], 'FLAIR.nii.gz')
+    t1_im =       os.path.join(options['test_folder'], 'T1.nii.gz')
+    flair_st_im = os.path.join(options['test_folder'], 'FLAIR_brain.nii.gz')
+    t1_st_im =    os.path.join(options['test_folder'], 'T1_brain.nii.gz')
     
     os.system(options['robex_path']  +  '  ' + flair_im + '  '  + flair_st_im)
     os.system(options['robex_path']  +  '  ' + t1_im +  '  ' + t1_st_im)

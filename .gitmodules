@@ -1,0 +1,3 @@
+[submodule "WMH_challenge"]
+	path = WMH_challenge
+	url = https://github.com/sergivalverde/WMH_challenge
