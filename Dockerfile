@@ -19,10 +19,6 @@ ENV CUDA_ROOT /usr/local/cuda/bin
 
 USER root
 
-RUN pip install pip --upgrade
-RUN pip install --upgrade https://github.com/Lasagne/Lasagne/archive/master.zip
-RUN pip install -r https://github.com/sergivalverde/WMH_docker/blob/master/requirements.txt 
-
 # CNN necessary files 
 ADD .theanorc /root/.theanorc
 ADD ROBEX /ROBEX 
@@ -31,6 +27,10 @@ ADD preprocess.py /preprocess.py
 ADD test_net.py /test_net.py
 ADD CASC_25_3D_256_128_64 /CASC_25_3D_256_128_64
 
+# install packages
+RUN pip install pip --upgrade
+RUN pip install --upgrade https://github.com/Lasagne/Lasagne/archive/master.zip
+RUN pip install -r /src/requirements.txt
 
 
 
