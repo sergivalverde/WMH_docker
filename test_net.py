@@ -62,7 +62,7 @@ try:
 except:
     pass
 
-os.system('cp ' + options['input_folder'] +'/ ' + options['tmp_folder']+'/')
+os.system('cp ' + options['input_folder'] +'/* ' + options['tmp_folder']+'/')
     
 
 # --------------------------------------------------
