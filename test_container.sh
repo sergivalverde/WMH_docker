@@ -32,7 +32,7 @@ do
     echo " "
     
     CONTAINERID=`nvidia-docker run -dit -v $TEST_ORIG:/input/orig:ro -v $TEST_PRE:/input/pre:ro -v /output wmhchallenge/$TEAM_NAME`
-    time docker exec -it $CONTAINERID $COMMAND
+    docker exec -it $CONTAINERID $COMMAND
     docker cp $CONTAINERID:/output $RESULT_TEAM
     docker stop $CONTAINERID
     docker rm -v $CONTAINERID

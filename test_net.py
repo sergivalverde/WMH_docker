@@ -61,7 +61,7 @@ options['l_min'] = 2
 # --------------------------------------------------
 # move things to a tmp folder before starting
 # --------------------------------------------------
-t = time.time()
+total_time = time.time()
 
 try: 
     os.mkdir(options['tmp_folder'])
@@ -77,31 +77,35 @@ os.system('cp ' + options['input_folder'] +'/pre/* ' + options['tmp_folder']+'/'
 # --------------------------------------------------
 
 time.sleep(5)
+prep_time = time.time()
 print "--------------------------------------------------"
-print "1. preprocessing "
+print "1. preprocessing " 
+skull_strip(options)
+print "elapsed time: ", round(time.time() - prep_time)
 print "--------------------------------------------------"
 
-skull_strip(options)
 
 # -------------------------------------------------        
 # initialize the CNN
 # load nets and trained weights
 # --------------------------------------------------
 
+loading_time = time.time()
 print "--------------------------------------------------"
-print "2. loading trained weights"
-print "--------------------------------------------------"
+print "2. loading trained weights",
 
 options['weight_paths'] = os.path.join('/')
 model = cascade_model(options)
+print "elapsed time: ", round(time.time() - loading_time_time)
+print "--------------------------------------------------"
+
     
 # --------------------------------------------------
 # Testing the cascaded model  
 # --------------------------------------------------
-
+testing_time = time.time()
 print "--------------------------------------------------"
 print "3. testing scan "
-print "--------------------------------------------------"
 
 x_data = {'seg': {'T1': os.path.join(options['tmp_folder'], options['x_names'][0]),
                   'FLAIR': os.path.join(options['tmp_folder'], options['x_names'][1])}}
@@ -135,6 +139,10 @@ out_scan = nib.load(x_data['seg']['T1'])
 out_scan.get_data()[:] = out_segmentation
 out_scan.to_filename(os.path.join(options['tmp_folder'], options['out_name']))
 
+print "elapsed time: ", round(time.time() - testing_time)
+print "--------------------------------------------------"
+
+
 # --------------------------------------------------
 # move the segmetnation back to the output folder
 # --------------------------------------------------
@@ -147,4 +155,4 @@ os.system('cp ' + os.path.join(options['tmp_folder'], options['out_name']) + ' '
 os.system('rm -r /tmp/seg/')
 
 print "\n"
-print "Elapsed time for segmentation: ", round(time.time() - t) , " seconds" 
+print "TOTAL TIME for segmentation: ", round(time.time() - total_time) , " seconds" 
