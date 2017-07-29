@@ -16,7 +16,9 @@ def skull_strip(options):
     t1_im =       os.path.join(options['tmp_folder'], 'T1.nii.gz')
     flair_st_im = os.path.join(options['tmp_folder'], 'FLAIR_brain.nii.gz')
     t1_st_im =    os.path.join(options['tmp_folder'], 'T1_brain.nii.gz')
-    
-    os.system(options['robex_path']  +  '  ' + flair_im + '  '  + flair_st_im)
-    os.system(options['robex_path']  +  '  ' + t1_im +  '  ' + t1_st_im)
+
+    print "preprocessing FLAIR image"
+    os.system(options['robex_path']  +  '  ' + flair_im + '  '  + flair_st_im + ' > /dev/null')
+    print "preprocessing T1 image"
+    os.system(options['robex_path']  +  '  ' + t1_im +  '  ' + t1_st_im  + ' > /dev/null') 
     

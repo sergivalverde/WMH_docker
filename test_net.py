@@ -12,11 +12,15 @@ import os, sys
 sys.path.append('/src/')
 
 # import libs
+import time
 import numpy as np
 import nibabel as nib
 from base import *
 from build_model import cascade_model
 from preprocess import skull_strip
+
+import warnings
+warnings.filterwarnings("ignore")
 
 # --------------------------------------------------
 # options
@@ -57,13 +61,14 @@ options['l_min'] = 2
 # --------------------------------------------------
 # move things to a tmp folder before starting
 # --------------------------------------------------
+t = time.time()
 
 try: 
     os.mkdir(options['tmp_folder'])
 except:
     pass
 
-os.system('cp ' + options['input_folder'] +'/* ' + options['tmp_folder']+'/')
+os.system('cp ' + options['input_folder'] +'/pre/* ' + options['tmp_folder']+'/')
     
 # --------------------------------------------------
 # preprocess the scans
@@ -71,6 +76,7 @@ os.system('cp ' + options['input_folder'] +'/* ' + options['tmp_folder']+'/')
 # T1.nii.gz --> T1_brain.nii.gz
 # --------------------------------------------------
 
+time.sleep(5)
 print "--------------------------------------------------"
 print "1. preprocessing "
 print "--------------------------------------------------"
@@ -139,3 +145,6 @@ print "--------------------------------------------------"
 
 os.system('cp ' + os.path.join(options['tmp_folder'], options['out_name']) + ' ' + options['output_folder'])
 os.system('rm -r /tmp/seg/')
+
+print "\n"
+print "Elapsed time for segmentation: ", round(time.time() - t) , " seconds" 
